@@ -1,0 +1,528 @@
+//This function generates the report with all the names that have been reported posive during the last 14 days
+function RTMSPerformanceSummary(){
+
+  var ss = SpreadsheetApp.getActive();
+  var _sheetsArray = new Array();
+  
+  _sheetsArray = ss.getSheets()
+  var _sheetCounter = _sheetsArray.length;
+  var _reportSheet = ss.getSheetByName("Reports");
+  var _thisSheet;
+  var _thisLastRow = 0;
+ 
+    
+  //call to clean up a previous report.
+  clearPerformanceSummary_(_reportSheet);
+  
+   var _dayCounter = 0;
+   var _date;
+   var _day;
+     
+     
+   //This FOR cycle, goes trhough every single Sheet backed up in this spreadsheet document. 
+   for (var _index = 1; _index < _sheetCounter; _index++) {
+     
+     _thisSheet = _sheetsArray[_index];
+     _thisLastRow = _thisSheet.getLastRow();
+     
+     var _thisSheetGrade5 = _thisSheet.getRange(_thisLastRow - 5, 4).getValue();
+     var _thisSheetGrade6 = _thisSheet.getRange(_thisLastRow - 4, 4).getValue();
+     var _thisSheetGrade7 = _thisSheet.getRange(_thisLastRow - 3, 4).getValue();
+     var _thisSheetGrade8 = _thisSheet.getRange(_thisLastRow - 2, 4).getValue();
+     var _thisSheetGrade9 = _thisSheet.getRange(_thisLastRow - 1, 4).getValue();
+     var _thisSheetTotal = _thisSheet.getRange(_thisLastRow, 4).getValue();
+               
+     var _thisSheetTotalEntries = _thisLastRow - 12;  // _thisLastRow - 12 takes out the last 11 rows + the heather row for a total of 12 rows that should not be counted.
+     
+     _date = cleanName_(_thisSheet.getName());
+     _day = getDayofWeek_(_date);
+     
+    
+     if (_dayCounter < 14 && _day == 'Sunday'){
+         _dayCounter = _dayCounter + 3;
+     }
+     else {
+         _dayCounter = _dayCounter + 1;
+     }
+  
+     
+     if (_dayCounter <= 14) {
+        
+       _reportSheet.getRange(_index+4,14).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,14).setValue(Utilities.formatDate(new Date(_date) , "GMT+3", "EE - MM/dd/yyyy"));
+       
+       
+       _reportSheet.getRange(_index+4,15).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,15).setNumberFormat("##0%");
+       _reportSheet.getRange(_index+4,15).setValue(_thisSheetGrade5);
+       
+       
+       _reportSheet.getRange(_index+4,16).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,16).setNumberFormat("##0%");
+       _reportSheet.getRange(_index+4,16).setValue(_thisSheetGrade6);
+     
+       _reportSheet.getRange(_index+4,17).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,17).setNumberFormat("##0%");
+       _reportSheet.getRange(_index+4,17).setValue(_thisSheetGrade7);       
+       
+       _reportSheet.getRange(_index+4,18).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,18).setNumberFormat("##0%");
+       _reportSheet.getRange(_index+4,18).setValue(_thisSheetGrade8);
+
+       _reportSheet.getRange(_index+4,19).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,19).setNumberFormat("##0%");
+       _reportSheet.getRange(_index+4,19).setValue(_thisSheetGrade9);
+       
+       _reportSheet.getRange(_index+4,20).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,20).setNumberFormat("##0%");
+       _reportSheet.getRange(_index+4,20).setValue(_thisSheetTotal);
+       
+     
+       _reportSheet.getRange(2,15).setValue(_date);  
+       _reportSheet.getRange(2,17).setValue(_dayCounter);  
+     }
+     
+   }
+  
+  
+
+}// end function
+
+
+
+
+
+
+
+
+//This function generates the report with all the names that have been reported posive during the last 14 days
+function PositiveCasesSummary(){
+
+  var ss = SpreadsheetApp.getActive();
+  var _sheetsArray = new Array();
+  
+  _sheetsArray = ss.getSheets()
+  var _sheetCounter = _sheetsArray.length;
+  var _reportSheet = ss.getSheetByName("Reports");
+  var _thisSheet;
+    
+  var _thisLastRow = 0;
+  var _tallySymptoms = 0;
+  var _tallyExposure = 0;
+  var _tallyTotalEntries = 0;
+  
+  
+  /******* CONSTANT DECLARATION SECTION ******/
+
+// These columns are the column nomber in RTMS spreadsheet that holds the yes/no for both symptoms and exposure questions.  
+//These columns will change from school to school, depending on how many sections that particualr school has
+
+const COL_SYMPTOMS = 34;
+const COL_EXPOSURE = 35;
+
+/********/
+  
+  
+  //call to clean up a previous report.
+  //clearThisSheet_(_reportSheet);
+ 
+   var initialRow = 5;
+   var initialCol = 7;
+   var _dayCounter = 0;
+    
+   cleanPositiveHistoryReport_(_reportSheet, initialCol); 
+    
+   //This FOR cycle, goes trhough every single Sheet backed up in this spreadsheet document. 
+   for (var _index = 1; _index < _sheetCounter; _index++) {
+     
+     _thisSheet = _sheetsArray[_index];
+     _thisLastRow = _thisSheet.getLastRow();
+     
+     
+     var _thisSheetTotalEntries = _thisLastRow - 11;  // _thisLastRow - 11 takes out the last 3 rows + the heather row for a total of 4 rows that should not be counted.
+     var _lastRow;
+     var _date;
+     var _day;
+     
+     
+     _date = cleanName_(_thisSheet.getName());
+     _day = getDayofWeek_(_date);
+     
+     
+     if (_dayCounter < 14 && _day == 'Sunday'){
+         _dayCounter = _dayCounter + 3;
+     }
+     else {
+         _dayCounter = _dayCounter + 1;
+     }
+          
+     if (_dayCounter <= 14) {
+     
+         _reportSheet.getRange(2,8).setValue(_date); 
+         
+         
+         //this for cycle, goes through every row on this spreadsheet.
+         for (var _rowCounter = 2; _rowCounter <= _thisSheetTotalEntries; _rowCounter++) {
+           
+           if ( _thisSheet.getRange(_rowCounter, COL_SYMPTOMS).getValue() != "No" || _thisSheet.getRange(_rowCounter, COL_EXPOSURE).getValue() != "No" ){
+               
+               _lastRow = _thisSheet.getRange('A'+ _rowCounter +':AI'+ _rowCounter);
+               
+    
+               _reportSheet.getRange(initialRow,initialCol).setBorder(true, true, true, true, null, null);
+               _reportSheet.getRange(initialRow,initialCol).setValue(Utilities.formatDate(new Date(_date) , "GMT+3", "EE - MM/dd/yyyy"));
+               
+               _reportSheet.getRange(initialRow,initialCol+1).setBorder(true, true, true, true, null, null);
+               _reportSheet.getRange(initialRow,initialCol+1).setValue(getName_(_lastRow)); // call to function to get name of student
+               
+               _reportSheet.getRange(initialRow,initialCol+2).setBorder(true, true, true, true, null, null);
+               _reportSheet.getRange(initialRow,initialCol+2).setValue(_thisSheet.getRange(_rowCounter, 3).getValue());
+               
+               _reportSheet.getRange(initialRow,initialCol+3).setBorder(true, true, true, true, null, null);
+               if( _thisSheet.getRange(_rowCounter, COL_SYMPTOMS).getValue() == 'Yes' ){           
+                 _reportSheet.getRange(initialRow,initialCol+3).setValue('Yes');
+               }
+               if( _thisSheet.getRange(_rowCounter, COL_SYMPTOMS).getValue() == 'Yes, but medication was given for their symptoms' ){           
+                 _reportSheet.getRange(initialRow,initialCol+3).setValue('Yes. Medication given.');
+               }
+               
+               _reportSheet.getRange(initialRow,initialCol+4).setBorder(true, true, true, true, null, null);
+               _reportSheet.getRange(initialRow,initialCol+4).setValue(_thisSheet.getRange(_rowCounter, COL_EXPOSURE).getValue());
+               
+               _reportSheet.getRange(initialRow,initialCol+5).setBorder(true, true, true, true, null, null);
+               _reportSheet.getRange(initialRow,initialCol+5).setValue("Row: " + _rowCounter );
+               
+               
+               initialRow++;
+               
+           }
+         
+         }//end for
+         
+     _reportSheet.getRange(2,10).setValue(_dayCounter);     
+     }//end if
+     
+     
+   }//end first FOR
+
+
+}//end function
+
+
+//This function generates a report of totals by day
+function TotalCountbyDay(){
+
+  var ss = SpreadsheetApp.getActive();
+  var _sheetsArray = new Array();
+  
+  _sheetsArray = ss.getSheets()
+  var _sheetCounter = _sheetsArray.length;
+  var _reportSheet = ss.getSheetByName("Reports");
+  var _thisSheet;
+  var _covidReportLastRow = 5;
+    
+  var _thisLastRow = 0;
+  var _tallySymptoms = 0;
+  var _tallyExposure = 0;
+  var _tallyTotalEntries = 0;
+  
+  
+  /******* CONSTANT DECLARATION SECTION ******/
+
+// These columns are the column nomber in RTMS spreadsheet that holds the yes/no for both symptoms and exposure questions.  
+//These columns will change from school to school, depending on how many sections that particualr school has
+
+const COL_SYMPTOMS = 34;
+const COL_EXPOSURE = 35;
+
+/********/
+  
+  //call to clean up a previous report.
+  clearThisSheet_(_reportSheet);
+  
+   var _dayCounter = 0;
+   var _date;
+   var _day;
+     
+     
+   //This FOR cycle, goes trhough every single Sheet backed up in this spreadsheet document. 
+   for (var _index = 1; _index < _sheetCounter; _index++) {
+     
+     _thisSheet = _sheetsArray[_index];
+     _thisLastRow = _thisSheet.getLastRow();
+     var _thisSheetSymptoms = _thisSheet.getRange(_thisLastRow - 10, COL_SYMPTOMS).getValue(); //this line is reading the summary that is on columns 34. 10 lines until the last row
+     var _thisSheetExposure = _thisSheet.getRange(_thisLastRow - 10, COL_EXPOSURE).getValue();////this line is reading the summary that is on columns 35.  10 lines under the last row
+     var _thisSheetTotalEntries = _thisLastRow - 12;  // _thisLastRow - 4 takes out the last 11 rows + the heather row for a total of 12 rows that should not be counted.
+     
+     _date = cleanName_(_thisSheet.getName());
+     _day = getDayofWeek_(_date);
+     
+    
+     if (_dayCounter < 14 && _day == 'Sunday'){
+         _dayCounter = _dayCounter + 3;
+     }
+     else {
+         _dayCounter = _dayCounter + 1;
+     }
+  
+     
+     if (_dayCounter <= 14) {
+        
+       _reportSheet.getRange(_index+4,2).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,2).setValue(Utilities.formatDate(new Date(_date) , "GMT+3", "EE - MM/dd/yyyy"));
+       
+       _reportSheet.getRange(_index+4,3).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,3).setValue(_thisSheetSymptoms);
+       _tallySymptoms = _tallySymptoms + _thisSheetSymptoms;
+       
+       _reportSheet.getRange(_index+4,4).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,4).setValue(_thisSheetExposure);
+       _tallyExposure = _tallyExposure + _thisSheetExposure;
+       
+       _reportSheet.getRange(_index+4,5).setBorder(true, true, true, true, null, null);
+       _reportSheet.getRange(_index+4,5).setValue(_thisSheetTotalEntries);   
+       _tallyTotalEntries = _tallyTotalEntries + _thisSheetTotalEntries;
+       
+       _covidReportLastRow = _covidReportLastRow + 1;
+     
+       _reportSheet.getRange(2,3).setValue(_date);  
+       _reportSheet.getRange(2,5).setValue(_dayCounter);  
+     }
+     
+   }
+  
+  //this section adds the totals at the end the report
+  var _reportSheetLastRow = _reportSheet.getLastRow();
+  
+  _reportSheet.getRange(_covidReportLastRow + 1,2).setFontWeight("bold");
+  _reportSheet.getRange(_covidReportLastRow + 1,2).setBorder(true, true, true, true, null, null);
+  _reportSheet.getRange(_covidReportLastRow + 1,2).setBackground("yellow");
+  _reportSheet.getRange(_covidReportLastRow + 1,2).setValue("Total:");
+  
+  _reportSheet.getRange(_covidReportLastRow + 1,3).setFontWeight("bold");
+  _reportSheet.getRange(_covidReportLastRow + 1,3).setBorder(true, true, true, true, null, null);
+  _reportSheet.getRange(_covidReportLastRow + 1,3).setBackground("yellow");
+  _reportSheet.getRange(_covidReportLastRow + 1,3).setValue(_tallySymptoms);
+  
+  
+  _reportSheet.getRange(_covidReportLastRow + 1,4).setFontWeight("bold");
+  _reportSheet.getRange(_covidReportLastRow + 1,4).setBorder(true, true, true, true, null, null);
+  _reportSheet.getRange(_covidReportLastRow + 1,4).setBackground("yellow");
+  _reportSheet.getRange(_covidReportLastRow + 1,4).setValue(_tallyExposure);
+  
+   _reportSheet.getRange(_covidReportLastRow + 1,5).setFontWeight("bold");
+  _reportSheet.getRange(_covidReportLastRow + 1,5).setBorder(true, true, true, true, null, null);
+  _reportSheet.getRange(_covidReportLastRow + 1,5).setBackground("yellow");
+  _reportSheet.getRange(_covidReportLastRow + 1,5).setValue(_tallyTotalEntries);
+  
+  //sets the total number of days analyzed
+  //_reportSheet.getRange(2,3).setValue(_sheetCounter-1);
+
+}// end Function
+
+
+//This function returns the day of the week, given a date
+function getDayofWeek_(_date){
+  var _day = Utilities.formatDate(new Date(_date) , "GMT+3", "EEEE");
+  return _day;
+}
+
+
+
+//this function will sweep all columns from the last row and look for the first name that shows up from the list of available sections. Since there can only be one name per row, in the case of students, the function returns
+//the first name found.  Please note that this function will skip certain columns that will change from school to school. (see constant declaration section below).  Each school will have to 
+//change this values according to their particular number of sections. 
+
+function getName_(row){   //parameter row: is a row type object. It contains all the columns on that row. 
+
+/******* CONSTANT DECLARATION SECTION ******/
+
+// the following constants represent the columns on the spreadsheet that hold only the "Select Homeroom" that has the names of the teachers who are assigned to those homerooms.  
+//these columns are identified with the purpose of skipping them while sweeping the row.  
+
+//grade 5 does not get a constant, since it can be skipped altogether
+const GRADE_6_HOMEROOM = 13;
+const GRADE_7_HOMEROOM = 22;
+const GRADE_8_HOMEROOM = 26;
+const GRADE_9_HOMEROOM = 30;
+
+const FIRST_COLUMN = 5;
+const LAST_COLUMN = 32;
+
+/***********/  
+  
+  //In the following FOR cycle, I sweep the last colum, starting from the first column that could get the first name (FIRST_COLUMN).  In RTMS case, LAST_COLUMN holds the last column that could contain a student name.  
+  //please note, these columns will change from school to school
+  
+  for (var _i = FIRST_COLUMN ; _i <= LAST_COLUMN ; _i++) {
+    if (_i != GRADE_6_HOMEROOM &&  _i != GRADE_7_HOMEROOM && _i != GRADE_8_HOMEROOM && _i != GRADE_9_HOMEROOM){
+         
+         if (row.getCell(1,_i).getValue() != ""){ 
+             //returns the first column that finds that is not blank
+             return row.getCell(1,_i).getValue();
+         }
+    }
+  }
+
+}//end _getName Function
+
+
+
+/* This function takes the "BACKUP- " part of the name of the form, leaving just the date*/
+function cleanName_ (_tempName){
+
+  var _newName = "";
+
+  for (var _i = 7 ; _i <= _tempName.length-1; _i++){
+    _newName = _newName + _tempName[_i];
+  }
+
+  return _newName;
+
+}
+
+
+/* This function deletes the value of the previous report and eliminates borders of the dynamic table */
+function clearPerformanceSummary_ (_tempSheet){
+  
+   var _tempSheetLastRow = _tempSheet.getLastRow();
+   _tempSheet.getRange(2,15).setValue("");
+   _tempSheet.getRange(2,17).setValue("");
+   
+   //14 - 20 col
+   for (var _i = 5 ; _i <= _tempSheetLastRow; _i++){
+   
+     _tempSheet.getRange(_i,14).setValue("");
+     _tempSheet.getRange(_i,14).setBorder(false, false, false, false, null, null);
+     _tempSheet.getRange(_i,14).setFontWeight("normal");
+     _tempSheet.getRange(_i,14).setBackground("white");
+     _tempSheet.getRange(_i,14).setFontColor("black");
+     
+     _tempSheet.getRange(_i,15).setValue("");
+     _tempSheet.getRange(_i,15).setBorder(false, false, false, false, null, null);
+     _tempSheet.getRange(_i,15).setFontColor("black");
+     _tempSheet.getRange(_i,15).setBackground("white");
+     _tempSheet.getRange(_i,15).setFontWeight("normal");
+     
+     _tempSheet.getRange(_i,16).setValue("");
+     _tempSheet.getRange(_i,16).setFontWeight("normal");
+     _tempSheet.getRange(_i,16).setBackground("white");
+     _tempSheet.getRange(_i,16).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,17).setValue("");
+     _tempSheet.getRange(_i,17).setFontWeight("normal");
+     _tempSheet.getRange(_i,17).setBackground("white");
+     _tempSheet.getRange(_i,17).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,18).setValue("");
+     _tempSheet.getRange(_i,18).setFontWeight("normal");
+     _tempSheet.getRange(_i,18).setBackground("white");
+     _tempSheet.getRange(_i,18).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,19).setValue("");
+     _tempSheet.getRange(_i,19).setFontWeight("normal");
+     _tempSheet.getRange(_i,19).setBackground("white");
+     _tempSheet.getRange(_i,19).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,20).setValue("");
+     _tempSheet.getRange(_i,20).setFontWeight("normal");
+     _tempSheet.getRange(_i,20).setBackground("white");
+     _tempSheet.getRange(_i,20).setBorder(false, false, false, false, null, null);
+     
+     
+   }
+   
+    _tempSheet.getRange(4,14).setBorder(true, true, true, true, null, null); 
+    _tempSheet.getRange(4,15).setBorder(true, true, true, true, null, null); 
+    _tempSheet.getRange(4,16).setBorder(true, true, true, true, null, null); 
+    _tempSheet.getRange(4,17).setBorder(true, true, true, true, null, null); 
+    _tempSheet.getRange(4,18).setBorder(true, true, true, true, null, null); 
+    _tempSheet.getRange(4,19).setBorder(true, true, true, true, null, null); 
+    _tempSheet.getRange(4,20).setBorder(true, true, true, true, null, null); 
+
+}
+
+
+/* This function deletes the value of the previous report and eliminates borders of the dynamic table */
+function clearThisSheet_ (_tempSheet){
+  
+   var _tempSheetLastRow = _tempSheet.getLastRow();
+   _tempSheet.getRange(2,3).setValue("");
+   _tempSheet.getRange(2,5).setValue("");
+   
+   
+   for (var _i = 5 ; _i <= _tempSheetLastRow; _i++){
+   
+     _tempSheet.getRange(_i,2).setValue("");
+     _tempSheet.getRange(_i,2).setBorder(false, false, false, false, null, null);
+     _tempSheet.getRange(_i,2).setFontWeight("normal");
+     _tempSheet.getRange(_i,2).setBackground("white");
+     _tempSheet.getRange(_i,2).setFontColor("black");
+     
+     _tempSheet.getRange(_i,3).setValue("");
+     _tempSheet.getRange(_i,3).setBorder(false, false, false, false, null, null);
+     _tempSheet.getRange(_i,3).setFontColor("black");
+     _tempSheet.getRange(_i,3).setBackground("white");
+     _tempSheet.getRange(_i,3).setFontWeight("normal");
+     
+     _tempSheet.getRange(_i,4).setValue("");
+     _tempSheet.getRange(_i,4).setFontWeight("normal");
+     _tempSheet.getRange(_i,4).setBackground("white");
+     _tempSheet.getRange(_i,4).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,5).setValue("");
+     _tempSheet.getRange(_i,5).setFontWeight("normal");
+     _tempSheet.getRange(_i,5).setBackground("white");
+     _tempSheet.getRange(_i,5).setBorder(false, false, false, false, null, null);
+     
+   }
+   
+    _tempSheet.getRange(4,2).setBorder(true, true, true, true, null, null); 
+    _tempSheet.getRange(4,3).setBorder(true, true, true, true, null, null); 
+    _tempSheet.getRange(4,4).setBorder(true, true, true, true, null, null); 
+    _tempSheet.getRange(4,5).setBorder(true, true, true, true, null, null); 
+   
+
+} //end function
+
+
+//This function cleans the table for the Positive Summary report
+function cleanPositiveHistoryReport_(_tempSheet,_initialCol) {
+
+  var _tempSheetLastRow = _tempSheet.getLastRow();
+  _tempSheet.getRange(2,8).setValue("");  //cleans last date field
+  _tempSheet.getRange(2,10).setValue("");  //cleans # days analyzed
+  
+  
+  for (var _i = 5 ; _i <= _tempSheetLastRow; _i++){
+     
+      
+     _tempSheet.getRange(_i,_initialCol).setValue("");
+     _tempSheet.getRange(_i,_initialCol).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,_initialCol+1).setValue("");
+     _tempSheet.getRange(_i,_initialCol+1).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,_initialCol+2).setValue("");
+     _tempSheet.getRange(_i,_initialCol+2).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,_initialCol+3).setValue("");
+     _tempSheet.getRange(_i,_initialCol+3).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,_initialCol+4).setValue("");
+     _tempSheet.getRange(_i,_initialCol+4).setBorder(false, false, false, false, null, null);
+     
+     _tempSheet.getRange(_i,_initialCol+5).setValue("");
+     _tempSheet.getRange(_i,_initialCol+5).setBorder(false, false, false, false, null, null);
+     
+     
+   }  
+   
+  _tempSheet.getRange(4,_initialCol).setBorder(true, true, true, true, null, null); 
+  _tempSheet.getRange(4,_initialCol+1).setBorder(true, true, true, true, null, null); 
+  _tempSheet.getRange(4,_initialCol+2).setBorder(true, true, true, true, null, null); 
+  _tempSheet.getRange(4,_initialCol+3).setBorder(true, true, true, true, null, null); 
+  _tempSheet.getRange(4,_initialCol+4).setBorder(true, true, true, true, null, null); 
+  _tempSheet.getRange(4,_initialCol+5).setBorder(true, true, true, true, null, null); 
+
+}//end cleanPositiveHistoryReport_ function

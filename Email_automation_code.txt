@@ -1,0 +1,286 @@
+//This function emails all the parents (from the AM sections) that have not filled out the COVID screener form. 
+//the function has been devided in sections by grade level for readability
+ 
+function email_Lazy_Teachers() {
+
+
+var dayOfWeek = Utilities.formatDate(new Date(), "GMT+3", "EEEE");
+
+  if (dayOfWeek != 'Friday' && dayOfWeek != 'Saturday'){
+  
+
+    var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1cdQiJ5PNhzfp5-NE-6gzTQg-pDed_BCttvN62u4TtUg/edit#gid=233503632");
+    
+    //this is the least of all spreadsheets I need to analyze
+    var RTMSstaff = ss.getSheetByName("Staff");
+    
+  /*********************************************************************************************************************/
+  /*********************************************** RTMS Staff **********************************************************/
+  /*********************************************************************************************************************/
+  
+    //this is the table with all staff members at RTMS.  This range would have to changed if there are new teachers are added or taken out. 
+    var staffTable = RTMSstaff.getRange('B2:F41');
+    
+    var tempEmailAddresses = "";
+    var sectionLastRow = staffTable.getNumRows();     
+    var counter = 0;
+    
+    for (var _row = 1; _row <= sectionLastRow ; _row++) {
+      
+      if (staffTable.getCell(_row, 3).isBlank() &&  staffTable.getCell(_row, 5).isBlank() ){
+        // call to grab email address from parents based on the student name.
+        
+        //studentName = staffTable.getCell(_row, 1).getValue();
+        counter++;
+        
+        if (counter == 1){
+          tempEmailAddresses = tempEmailAddresses + staffTable.getCell(_row, 1).getValue();
+        }
+        else{
+          tempEmailAddresses = tempEmailAddresses + ", " + staffTable.getCell(_row, 1).getValue();
+        } 
+      }
+      
+    }//end for
+   
+    emailTeachers_(tempEmailAddresses, counter);
+    //emailSummary_(counter); 
+    
+ }// end if weekend
+  
+}//end function
+
+
+
+//This function sends the administrator an email with a summary count of the emails sent in total by AM / PM. It also provides a list of grades where emails were sent.
+function emailSummary_(emailsSent){
+  
+    MailApp.sendEmail({
+      bcc:  "mherrera@saeslearning.com" , 
+      subject: "Emails Sent Summary",
+      htmlBody: "Dear Administrator, <br><br>Today, " + emailsSent + " email(s) were sent."
+    });
+}//end function
+
+
+
+//This function emails parents (per grade level) a reminder to fill out the form.
+function emailTeachers_(emailList, emailCount){
+
+var _message = "Dear staff member, <br><br> Our records indicate that you have not filled out the COVID Screening form today." +  
+               "This is a reminder to please fill out the COVID screening form " +
+               "<a  href='https://docs.google.com/forms/d/e/1FAIpQLSeBKxWnUfM7EtcxUA6hLuy_S_GrlJjh1HygT1vdqRsaLZ7TzQ/viewform' target='_blank'>(LINK HERE)</a> " +
+               "to report your status before coming to school. <br><br>Thank you, <br><br> RTMS Admin team."
+
+  MailApp.sendEmail({
+      to: 'rtm_gsadmin@saeslearning.com, mmaples@saeslearning.com, rtmsattendance@saeslearning.com,rhendricks@saeslearning.com',
+      bcc:  emailList , 
+      subject: "RTMS Staff - COVID Screening Form Reminder",
+      htmlBody: _message
+    });
+    
+     //This sectio sends a summary to the administrator per grade level.
+     MailApp.sendEmail({
+      to:  "mherrera@saeslearning.com, calbritton@saeslearning.com, mmaples@saeslearning.com, rtmsattendance@saeslearning.com" , 
+      subject: "COVID Screening email report",
+      htmlBody: "Dear Administrator, <br><br>The COVID screener reminder email was sent to the following teachers (" + emailCount + "): " + emailList
+    });
+    
+}//end function
+
+
+
+
+function emailNurseWhenPositive() {
+
+var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1cdQiJ5PNhzfp5-NE-6gzTQg-pDed_BCttvN62u4TtUg/edit#gid=1412951867");
+var sheet = ss.getSheetByName("Form Responses 1");
+var lastRow = sheet.getLastRow();
+
+/******* CONSTANT DECLARATION SECTION ******/
+// These columns are the column nomber in RTMS spreadsheet that holds the yes/no for both symptoms and exposure questions.  
+//These columns will change from school to school, depending on how many sections that particualr school has
+
+const COL_SYMPTOMS = 3;
+const COL_EXPOSURE = 4;
+
+/********/
+
+
+var _lastRow = sheet.getRange('A1:D'+lastRow);
+
+var _symptoms = _lastRow.getCell(lastRow,COL_SYMPTOMS).getValue();
+var _exposure = _lastRow.getCell(lastRow,COL_EXPOSURE).getValue();
+
+var _message = "";
+var _emailBody = "";
+
+var _email = "";
+var _name = "";
+
+
+ if ( _symptoms != "No" || _exposure != "No" ) {
+ 
+   _email = _lastRow.getCell(lastRow,2).getValue();
+      
+   if (_symptoms == "Yes"){
+     _message = "<u>is showing COVID symptoms</u>";
+   }
+   
+   if (_symptoms == "Yes, but medication was given for their symptoms"){
+     _message = "<u>is showing COVID symptoms, but medication was given to treat them</u>";
+   }
+   
+   if (_exposure == "Yes"){
+     _message = "<u>has been exposed to a patient with COVID symptoms</u>";
+   }
+   
+   _emailBody = "Dear RTMS Admin team,<br><br> The Covid tracking survey indicates that the teacher: <b>" + _email + "</b> "+ _message + ".<br><br>Row #: " + lastRow
+   
+   
+   //
+    
+    MailApp.sendEmail({
+      to:  "rhendricks@saeslearning.com, calbritton@saeslearning.com, rtmsattendance@saeslearning.com, mmaples@saeslearning.com" , 
+      subject: "Covid Form - Entry Alert",
+      htmlBody: _emailBody
+    });
+ 
+ }
+ 
+ 
+}//end function
+
+
+function Teachers_Covid_NightlyPurge() {
+  
+  var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1cdQiJ5PNhzfp5-NE-6gzTQg-pDed_BCttvN62u4TtUg/edit#gid=1412951867");
+  var sheet = ss.getSheetByName("Form Responses 1");
+  var lastRow = sheet.getLastRow();
+  var lastCol = sheet.getLastColumn();
+  var dayOfWeek = Utilities.formatDate(new Date(), "GMT+3", "EEEE"); 
+  
+  var rtm_date = Utilities.formatDate(new Date(), "GMT+3", "MM/dd/yyyy");
+  var new_name = "Backup-" + rtm_date;
+  
+  /*NEW for Covid Count*/
+  var sypmtomsCount = 0;
+  var ExposureCount = 0;
+  /********/
+  
+
+/******* CONSTANT DECLARATION SECTION ******/
+  // These columns are the column nomber in RTMS spreadsheet that holds the yes/no for both symptoms and exposure questions.  
+  //These columns will change from school to school, depending on how many sections that particualr school has
+  //these constant values are set to determine the columns where the answers for symptoms and exposure are stored. Please note that these values are specific for RTMS.  Any other school will have to change these values
+  //to match their particular spreadsheet layout.
+
+  const COL_SYMPTOMS = 3;
+  const COL_EXPOSURE = 4;
+  
+  /********/
+  
+ if (dayOfWeek != 'Friday' && dayOfWeek != 'Saturday'){
+    
+  try {
+    //instance the backup log spreadsheet
+    var ss_backup = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1nXzbdLdB447ezW9S2fh1AISZxci6x1IzB586380QrnM/edit#gid=0");  
+   
+    //Creates a new sheet inside the backup log spreadsheet
+    var newSheet = ss_backup.insertSheet();
+    newSheet.setName(new_name);
+  
+    //this line formats the first column
+    newSheet.getRange("A2:A500").setNumberFormat("hh:mm am/pm") ;
+    newSheet.setColumnWidths(2, 1, 200);
+  
+  } catch(err){  
+     SpreadsheetApp.flush(); }
+  
+
+  //selects range for the whole source sheet
+  var dataToCopy = sheet.getRange('A1:F'+lastRow);
+  
+  //Creates new sheet on the backup log with unique name
+  var copyToSheet = ss_backup.getSheetByName(new_name);
+  
+  
+  for (var _row = 1; _row <= lastRow ; _row++) {
+    for (var _col = 1; _col <= lastCol ; _col++){
+                
+     
+      var Paste = copyToSheet.getRange(_row,_col).setValues(dataToCopy.getCell(_row,_col).getValues());
+      
+      //counting the YES for Symptoms 
+      if (_col == COL_SYMPTOMS){
+        if (dataToCopy.getCell(_row,_col).getValues() == "Yes"){
+          sypmtomsCount = sypmtomsCount +1;
+        }
+      }
+      //counting the YES for Symptoms but treated
+      if (_col == COL_SYMPTOMS){
+        if (dataToCopy.getCell(_row,_col).getValues() == "Yes, but medication was given for their symptoms"){
+          sypmtomsCount = sypmtomsCount +1;
+        }
+      }
+      
+      //counting the YES for Exposure
+      if (_col == COL_EXPOSURE){
+        if (dataToCopy.getCell(_row,_col).getValues() == "Yes"){
+          ExposureCount = ExposureCount +1;
+        }
+      }
+      
+     //counting the YES for Symptoms and exposure
+        
+    } //end _col FOR
+  } //end _row FOR
+
+
+  
+  /* This section sets a SUMMARY of the total count for students / staff with symptoms and/or exposure per day */
+    
+  copyToSheet.getRange(lastRow+2,2).setFontWeight("bold");
+  copyToSheet.getRange(lastRow+2,2).setBorder(true, true, true, true, null, null);
+  copyToSheet.getRange(lastRow+2,2).setValue("Summary");
+  
+  copyToSheet.getRange(lastRow+2,3).setFontWeight("bold");
+  copyToSheet.getRange(lastRow+2,3).setBorder(true, true, true, true, null, null);
+  copyToSheet.getRange(lastRow+2,3).setValue("sypmtoms");
+  
+  copyToSheet.getRange(lastRow+2,4).setFontWeight("bold");
+  copyToSheet.getRange(lastRow+2,4).setBorder(true, true, true, true, null, null);
+  copyToSheet.getRange(lastRow+2,4).setValue("Exposure");
+  
+  copyToSheet.getRange(lastRow+2,5).setFontWeight("bold");
+  copyToSheet.getRange(lastRow+2,5).setBorder(true, true, true, true, null, null);
+  copyToSheet.getRange(lastRow+2,5).setValue("Entries");
+  
+  
+  copyToSheet.getRange(lastRow+3,2).setFontWeight("bold");
+  copyToSheet.getRange(lastRow+3,2).setBorder(true, true, true, true, null, null);
+  copyToSheet.getRange(lastRow+3,2).setBackground("yellow");
+  copyToSheet.getRange(lastRow+3,2).setValue("Total:");
+  
+  copyToSheet.getRange(lastRow+3,3).setFontWeight("bold");
+  copyToSheet.getRange(lastRow+3,3).setBorder(true, true, true, true, null, null);
+  copyToSheet.getRange(lastRow+3,3).setBackground("yellow");
+  copyToSheet.getRange(lastRow+3,3).setValue(sypmtomsCount);
+  
+  copyToSheet.getRange(lastRow+3,4).setFontWeight("bold");
+  copyToSheet.getRange(lastRow+3,4).setBorder(true, true, true, true, null, null);
+  copyToSheet.getRange(lastRow+3,4).setBackground("yellow");
+  copyToSheet.getRange(lastRow+3,4).setValue(ExposureCount);
+  
+  copyToSheet.getRange(lastRow+3,5).setFontWeight("bold");
+  copyToSheet.getRange(lastRow+3,5).setBorder(true, true, true, true, null, null);
+  copyToSheet.getRange(lastRow+3,5).setBackground("yellow");
+  copyToSheet.getRange(lastRow+3,5).setValue(lastRow-1);
+  
+  
+  // this part deletes only until the last row 
+  sheet.deleteRows(2, lastRow);
+ 
+ }
+  
+};

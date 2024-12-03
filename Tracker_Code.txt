@@ -1,0 +1,1091 @@
+var _TotalEmailsSent = 0;
+var _TotalStudentsEmailed = 0;
+var _StudentName_plus_emails = "";
+
+//This function emails all the parents (from the AM sections) that have not filled out the COVID screener form. 
+//the function has been devided in sections by grade level for readability
+function emailParentsToFillOutForm_AM() {
+
+  var dayOfWeek = Utilities.formatDate(new Date(), "GMT+3", "EEEE");
+
+  if (dayOfWeek != 'Friday' && dayOfWeek != 'Saturday'){
+
+
+     _TotalEmailsSent =0;
+    var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1NOpccZ_gNNAhAJK1usuzzJLKLI01cws2Lz0YDDOJpw4/edit#gid=985835692");
+    
+    //this is the least of all spreadsheets I need to analyze
+    var grade5 = ss.getSheetByName("Grade 5");
+    var grade6 = ss.getSheetByName("Grade 6");
+    var grade7 = ss.getSheetByName("Grade 7");
+    var grade8 = ss.getSheetByName("Grade 8");
+    var grade9 = ss.getSheetByName("Grade 9");
+    
+    var emailsSentAM = 0;
+    var gradesEmailedAM = "";
+    
+  /*********************************************************************************************************************/
+  /*********************************************** Grade 5 AM **********************************************************/
+  /*********************************************************************************************************************/
+  
+  //this is the list of groups that need to be analyzed in the morning  for grade 5.  These ranges would have to changed if there are new students added or students taken out. 
+    var NelsonAM = grade5.getRange('B3:E13');
+    var VasquezAM = grade5.getRange('G3:J13');
+    var CarscaddenAM = grade5.getRange('L3:O13');
+    var ChaneyAM = grade5.getRange('Q3:T13');
+    
+    //this variable complies all the email addresses of parents who need to be reminded to fill out the form.
+    var emailParentListGrade5AM = "";
+    
+    
+    var emailsNelsonAM = getParentEmails_(NelsonAM);
+    var emailsVasquezAM = getParentEmails_(VasquezAM);
+    var emailsCarsccaddenAM = getParentEmails_(CarscaddenAM);
+    var emailsChaneyAM = getParentEmails_(ChaneyAM);
+    
+    if (emailsNelsonAM != "-"){ 
+      emailParentListGrade5AM = emailParentListGrade5AM + emailsNelsonAM;
+    } 
+       
+    if (emailsVasquezAM != "-"){ 
+       emailParentListGrade5AM = emailParentListGrade5AM + ", " + emailsVasquezAM;
+    }
+    
+   if (emailsCarsccaddenAM != "-"){ 
+     emailParentListGrade5AM = emailParentListGrade5AM + ", " + emailsCarsccaddenAM;
+   }
+    
+   if (emailsChaneyAM != "-"){ 
+     emailParentListGrade5AM = emailParentListGrade5AM + ", " + emailsChaneyAM;
+   }  
+      
+    if (emailParentListGrade5AM != ""){
+      emailParents_(cleanEmailList_(emailParentListGrade5AM), "Grade 5 - AM", _StudentName_plus_emails);
+      emailsSentAM++;
+      gradesEmailedAM = gradesEmailedAM + "Grade 5 "
+    }
+  _TotalEmailsSent =0;
+  _StudentName_plus_emails = "";
+  _TotalStudentsEmailed = 0;
+  
+  /*********************************************************************************************************************/
+  /*********************************************** Grade 6 AM **********************************************************/
+  /*********************************************************************************************************************/
+  
+  //this is the list of groups that need to be analyzed in the morning  for grade 6.  These ranges would have to changed if there are new students added or students taken out. 
+    var CoulsonAM = grade6.getRange('B3:E13');
+    var MaplesAM = grade6.getRange('G3:J13');
+    var BurksAM = grade6.getRange('L3:O13');
+    var MyersAM = grade6.getRange('Q3:T13');
+    
+    //this variable complies all the email addresses of parents who need to be reminded to fill out the form.
+    var emailParentListGrade6AM = "";
+    
+    var emailsCoulsonAM = getParentEmails_(CoulsonAM);
+    var emailsMaplesAM = getParentEmails_(MaplesAM);
+    var emailsBurksAM = getParentEmails_(BurksAM);
+    var emailsMyersAM = getParentEmails_(MyersAM);
+    
+    if (emailsCoulsonAM != "-"){ 
+      emailParentListGrade6AM = emailParentListGrade6AM + emailsCoulsonAM;
+    } 
+       
+    if (emailsMaplesAM != "-"){ 
+       emailParentListGrade6AM = emailParentListGrade6AM + ", " + emailsMaplesAM;
+    }
+    
+   if (emailsBurksAM != "-"){ 
+     emailParentListGrade6AM = emailParentListGrade6AM + ", " + emailsBurksAM;
+   }
+    
+   if (emailsMyersAM != "-"){ 
+     emailParentListGrade6AM = emailParentListGrade6AM + ", " + emailsMyersAM;
+   }  
+      
+    if (emailParentListGrade6AM != ""){
+      emailParents_(cleanEmailList_(emailParentListGrade6AM), "Grade 6 - AM", _StudentName_plus_emails);
+      emailsSentAM++;
+      gradesEmailedAM = gradesEmailedAM + "Grade 6 "
+    }
+  
+  _TotalEmailsSent =0;
+  _StudentName_plus_emails = "";
+  _TotalStudentsEmailed = 0;
+  /*********************************************************************************************************************/
+  /*********************************************** Grade 7 AM **********************************************************/
+  /*********************************************************************************************************************/
+  
+  //this is the list of groups that need to be analyzed in the morning  for grade 7.  These ranges would have to changed if there are new students added or students taken out. 
+    var ConzemiusAM = grade7.getRange('B3:E27');
+    
+    //this variable complies all the email addresses of parents who need to be reminded to fill out the form.
+    var emailParentListGrade7AM = "";
+    var emailsConzemiusAM = getParentEmails_(ConzemiusAM);
+    
+    
+    if (emailsConzemiusAM != "-"){ 
+      emailParentListGrade7AM = emailParentListGrade7AM + emailsConzemiusAM;
+    } 
+        
+    if (emailParentListGrade7AM != ""){
+      emailParents_(cleanEmailList_(emailParentListGrade7AM), "Grade 7 - AM", _StudentName_plus_emails);
+      emailsSentAM++;
+      gradesEmailedAM = gradesEmailedAM + "Grade 7 "
+    }
+  _TotalEmailsSent =0;
+  _StudentName_plus_emails = "";
+  _TotalStudentsEmailed = 0;
+  /*********************************************************************************************************************/
+  /*********************************************** Grade 8 AM **********************************************************/
+  /*********************************************************************************************************************/
+  
+  //this is the list of groups that need to be analyzed in the morning  for grade 8.  These ranges would have to changed if there are new students added or students taken out. 
+    var BossungAM = grade8.getRange('B3:E27');
+    
+    //this variable complies all the email addresses of parents who need to be reminded to fill out the form.
+    var emailParentListGrade8AM = "";
+    var emailsBossungAM = getParentEmails_(BossungAM);
+    
+    
+    if (emailsBossungAM != "-"){ 
+      emailParentListGrade8AM = emailParentListGrade8AM + emailsBossungAM;
+    } 
+      
+    if (emailParentListGrade8AM != ""){
+      emailParents_(cleanEmailList_(emailParentListGrade8AM), "Grade 8 - AM", _StudentName_plus_emails);
+      emailsSentAM++;
+      gradesEmailedAM = gradesEmailedAM + "Grade 8 "
+    }
+  _TotalEmailsSent =0;
+  _StudentName_plus_emails = "";
+  _TotalStudentsEmailed = 0;
+  /*********************************************************************************************************************/
+  /*********************************************** Grade 9 AM **********************************************************/
+  /*********************************************************************************************************************/
+  
+  //this is the list of groups that need to be analyzed in the morning  for grade 9.  These ranges would have to changed if there are new students added or students taken out. 
+    var ReblAM = grade9.getRange('B3:E27');
+    var HerrmannAM = grade9.getRange('G3:J27');
+    
+    
+    //this variable complies all the email addresses of parents who need to be reminded to fill out the form.
+    var emailParentListGrade9AM = "";
+    
+    var emailsReblAM = getParentEmails_(ReblAM);
+    var emailsHerrmannAM = getParentEmails_(HerrmannAM);
+    
+    
+    if (emailsReblAM != "-"){ 
+      emailParentListGrade9AM = emailParentListGrade9AM + emailsReblAM;
+    } 
+       
+    if (emailsHerrmannAM != "-"){ 
+       emailParentListGrade9AM = emailParentListGrade9AM + ", " + emailsHerrmannAM;
+    }
+       
+    if (emailParentListGrade9AM != ""){
+      emailParents_(cleanEmailList_(emailParentListGrade9AM), "Grade 9 - AM", _StudentName_plus_emails);
+      emailsSentAM++;
+      gradesEmailedAM = gradesEmailedAM + "Grade 9"
+    }
+    _TotalEmailsSent =0;
+    _StudentName_plus_emails = "";
+    _TotalStudentsEmailed = 0;
+    emailSummary_(emailsSentAM, gradesEmailedAM, "AM Script"); 
+  
+  }//end if not weekend
+  
+}//end function
+
+
+//This function emails all the parents (from the PM sections) that have not filled out the COVID screener form. 
+//the function has been devided in sections by grade level for readability
+function emailParentsToFillOutForm_PM() {
+  
+  var dayOfWeek = Utilities.formatDate(new Date(), "GMT+3", "EEEE");
+
+  if (dayOfWeek != 'Friday' && dayOfWeek != 'Saturday'){
+  
+    _TotalEmailsSent =0;
+    var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1NOpccZ_gNNAhAJK1usuzzJLKLI01cws2Lz0YDDOJpw4/edit#gid=985835692");
+    
+    //this is the least of all spreadsheets I need to analyze
+    var grade5 = ss.getSheetByName("Grade 5");
+    var grade6 = ss.getSheetByName("Grade 6");
+    var grade7 = ss.getSheetByName("Grade 7");
+    var grade8 = ss.getSheetByName("Grade 8");
+    
+    var emailsSentPM = 0;
+    var gradesEmailedPM = "";
+  
+  /*********************************************************************************************************************/
+  /*********************************************** Grade 5 PM **********************************************************/
+  /*********************************************************************************************************************/
+  
+  //this is the list of groups that need to be analyzed in the morning  for grade 5.  These ranges would have to changed if there are new students added or students taken out. 
+    var NelsonPM = grade5.getRange('B17:E27');
+    var VasquezPM = grade5.getRange('G17:J27');
+    var CarscaddenPM = grade5.getRange('L17:O27');
+    var ChaneyPM = grade5.getRange('Q17:T27');
+    
+    //this variable complies all the email addresses of parents who need to be reminded to fill out the form.
+    var emailParentListGrade5PM = "";
+    
+    var emailsNelsonPM = getParentEmails_(NelsonPM);
+    var emailsVasquezPM = getParentEmails_(VasquezPM);
+    var emailsCarsccaddenPM = getParentEmails_(CarscaddenPM);
+    var emailsChaneyPM = getParentEmails_(ChaneyPM);
+    
+    if (emailsNelsonPM != "-"){ 
+      emailParentListGrade5PM = emailParentListGrade5PM + emailsNelsonPM;
+    } 
+       
+    if (emailsVasquezPM != "-"){ 
+       emailParentListGrade5PM = emailParentListGrade5PM + ", " + emailsVasquezPM;
+    }
+    
+   if (emailsCarsccaddenPM != "-"){ 
+     emailParentListGrade5PM = emailParentListGrade5PM + ", " + emailsCarsccaddenPM;
+   }
+    
+   if (emailsChaneyPM != "-"){ 
+     emailParentListGrade5PM = emailParentListGrade5PM + ", " + emailsChaneyPM;
+   }  
+    
+    if (emailParentListGrade5PM != ""){
+      emailParents_(cleanEmailList_(emailParentListGrade5PM), "Grade 5 - PM", _StudentName_plus_emails);
+      emailsSentPM++;
+      gradesEmailedPM = gradesEmailedPM + "Grade 5 "
+    }
+    _TotalEmailsSent =0;
+    _StudentName_plus_emails = "";
+    _TotalStudentsEmailed = 0;
+  /*********************************************************************************************************************/
+  /*********************************************** Grade 6 PM **********************************************************/
+  /*********************************************************************************************************************/
+  
+  //this is the list of groups that need to be analyzed in the morning  for grade 6.  These ranges would have to changed if there are new students added or students taken out. 
+    var CoulsonPM = grade6.getRange('B17:E27');
+    var MaplesPM = grade6.getRange('G17:J27');
+    var BurksPM = grade6.getRange('L17:O27');
+    var MyersPM = grade6.getRange('Q17:T27');
+    
+    //this variable complies all the email addresses of parents who need to be reminded to fill out the form.
+    var emailParentListGrade6PM = "";
+    
+    var emailsCoulsonPM = getParentEmails_(CoulsonPM);
+    var emailsMaplesPM = getParentEmails_(MaplesPM);
+    var emailsBurksPM = getParentEmails_(BurksPM);
+    var emailsMyersPM = getParentEmails_(MyersPM);
+    
+    if (emailsCoulsonPM != "-"){ 
+      emailParentListGrade6PM = emailParentListGrade6PM + emailsCoulsonPM;
+    } 
+       
+    if (emailsMaplesPM != "-"){ 
+       emailParentListGrade6PM = emailParentListGrade6PM + ", " + emailsMaplesPM;
+    }
+    
+   if (emailsBurksPM != "-"){ 
+     emailParentListGrade6PM = emailParentListGrade6PM + ", " + emailsBurksPM;
+   }
+    
+   if (emailsMyersPM != "-"){ 
+     emailParentListGrade6PM = emailParentListGrade6PM + ", " + emailsMyersPM;
+   }  
+      
+    if (emailParentListGrade6PM != ""){
+      emailParents_(cleanEmailList_(emailParentListGrade6PM), "Grade 6 - PM", _StudentName_plus_emails);
+      emailsSentPM++;
+      gradesEmailedPM = gradesEmailedPM + "Grade 6 "
+    }
+    _TotalEmailsSent =0;
+    _StudentName_plus_emails = "";
+   _TotalStudentsEmailed = 0;
+  /*********************************************************************************************************************/
+  /*********************************************** Grade 7 PM **********************************************************/
+  /*********************************************************************************************************************/
+  
+  //this is the list of groups that need to be analyzed in the morning  for grade 7.  These ranges would have to changed if there are new students added or students taken out. 
+    var JuddPM = grade7.getRange('G3:J27');
+    var RuePM = grade7.getRange('L3:O27');
+    
+    //this variable complies all the email addresses of parents who need to be reminded to fill out the form.
+    var emailParentListGrade7PM = "";
+    
+    var emailsJuddPM = getParentEmails_(JuddPM);
+    var emailsRuePM = getParentEmails_(RuePM);
+    
+    
+    if (emailsJuddPM != "-"){ 
+      emailParentListGrade7PM = emailParentListGrade7PM + emailsJuddPM;
+    } 
+    
+    if (emailsRuePM != "-"){ 
+      emailParentListGrade7PM = emailParentListGrade7PM + ", " + emailsRuePM;
+    } 
+      
+    if (emailParentListGrade7PM != ""){
+      emailParents_(cleanEmailList_(emailParentListGrade7PM), "Grade 7 - PM", _StudentName_plus_emails);
+      emailsSentPM++;
+      gradesEmailedPM = gradesEmailedPM + "Grade 7 "
+    }
+    _TotalEmailsSent =0;
+    _StudentName_plus_emails = "";
+    _TotalStudentsEmailed = 0;
+  /*********************************************************************************************************************/
+  /*********************************************** Grade 8 PM **********************************************************/
+  /*********************************************************************************************************************/
+  
+  //this is the list of groups that need to be analyzed in the morning  for grade 8.  These ranges would have to changed if there are new students added or students taken out. 
+    var LeGassickPM = grade8.getRange('G3:J27');
+    var SwetsPM = grade8.getRange('L3:O27');
+    
+    //this variable complies all the email addresses of parents who need to be reminded to fill out the form.
+    var emailParentListGrade8PM = "";
+    
+    var emailsLeGassickPM = getParentEmails_(LeGassickPM);
+    var emailsSwetsPM = getParentEmails_(SwetsPM);
+    
+    if (emailsLeGassickPM != "-"){ 
+      emailParentListGrade8PM = emailParentListGrade8PM + emailsLeGassickPM;
+    } 
+    
+    if (emailsSwetsPM != "-"){ 
+      emailParentListGrade8PM = emailParentListGrade8PM + ", " + emailsSwetsPM;
+    } 
+      
+    if (emailParentListGrade8PM != ""){
+      emailParents_(cleanEmailList_(emailParentListGrade8PM), "Grade 8 - PM", _StudentName_plus_emails);
+      emailsSentPM++;
+      gradesEmailedPM = gradesEmailedPM + "Grade 8"
+    }
+    
+    _TotalEmailsSent =0;
+    _StudentName_plus_emails = "";
+    _TotalStudentsEmailed = 0;
+    emailSummary_(emailsSentPM, gradesEmailedPM, "PM Script"); 
+
+  }// end if this is the weekend
+  
+}//end function
+
+
+//This function sends the administrator an email with a summary count of the emails sent in total by AM / PM. It also provides a list of grades where emails were sent.
+function emailSummary_(emailsSent, grades, AMorPM){
+  
+    MailApp.sendEmail({
+      bcc:  "rhendricks@saeslearning.com, rtmsattendance@saeslearning.com" , 
+      subject: AMorPM + ": Emails Sent Summary",
+      htmlBody: AMorPM + ": " + emailsSent + " email(s) sent. Grade(s): " + grades
+    });
+   
+}//end function
+
+//This function emails parents (per grade level) a reminder to fill out the form.
+function emailParents_(emailList, grade, StudentName_plus_emails){
+
+var _message = "Dear parents, <br><br> Our records indicate that you have not filled out the COVID Screening form today." +  
+               "This is an automated reminder to please fill out the COVID screening form " +
+               "<a  href='https://docs.google.com/forms/d/e/1FAIpQLSe9zhDQbJwMJaIJYOdv4tHPn5bOn39O-62iqqj5Jcj6dEQLYQ/viewform' target='_blank'>(LINK HERE)</a> " +
+               "to report the status of your child before sending him(her) to school."+
+               "<br><br>Please note that parents are expected to fill out the form <b>every day</b> before sending their child(ren) to school. " +               
+               "<br><br>Thank you for your understanding and for helping us keep our community safe, <br><br> RTMS Admin team."
+
+//"For the safety of your child(ren), staff, and the community, students whose form has not been filled out will be denied entry until the form has been completed." +
+
+
+  
+  MailApp.sendEmail({
+      bcc:  emailList , 
+      subject: "RTMS Health Screening Form Reminder- * ACTION REQUIRED *",
+      htmlBody: _message
+    });
+  
+  //, rtmsattendance@saeslearning.com, mmaples@saeslearning.com  
+     //This sectio sends a summary to the administrator per grade level.
+     MailApp.sendEmail({
+      to:  "rhendricks@saeslearning.com, rtmsattendance@saeslearning.com,  mmaples@saeslearning.com" , 
+      subject: "COVID Screening email report",
+      htmlBody: "<br>Dear RTMS Admin team," +
+                "<br><br>Please find below a summary of emails sent to section: <b>" + grade + "</b>.<br><br>" +
+                "<b>Number of families emailed:</b> "+ _TotalStudentsEmailed + "<br> " + 
+                "<b>Total emails sent:</b> "+ _TotalEmailsSent + "<br>" +
+                "<b>Date:</b> " + Utilities.formatDate(new Date(), "GMT+3", "EEEE MMMM dd, yyyy") +"<br><br>" +
+                "The reminder email was sent to the following parents: <br><br>" + 
+                "<table border=1;> <tr> <td> <b> Student Name </b> </td> <td> <b> Father's Email </b> </td> <td> <b> Mother's Email </b> </td>  </tr>" +
+                StudentName_plus_emails +
+                "</table>"
+    });
+  
+    
+    
+}//end function
+
+
+//This function will check if exist and eliminate the ", " characters that an email list might have in some instances.  
+function cleanEmailList_(emailList){
+
+  var _cleanEmailList = "";
+  if (emailList[0] == ","){
+    
+    for (var _i = 2 ; _i <= emailList.length-1; _i++){
+      _cleanEmailList = _cleanEmailList + emailList[_i];
+    }
+    
+    return _cleanEmailList;    
+  }
+  else{
+    return (emailList);
+  }
+
+}//end function
+
+
+//private function.  Given a set of data, this function identified the names of the students who's parents have not filled out the form 
+//and excludes the ones who were flagged OOK or otherwise. It then calls to another function
+// to collect all email addresses that have not filled out the form. 
+function getParentEmails_ (sectionName){
+
+  var tempEmailAddresses = "";
+  var sectionLastRow = sectionName.getNumRows()
+  var counter = 0;
+  var studentName = "";  
+  
+  for (var _row = 1; _row <= sectionLastRow ; _row++) {
+    
+    if (sectionName.getCell(_row, 2).isBlank() &&  sectionName.getCell(_row, 4).isBlank() ){
+      // call to grab email address from parents based on the student name.
+      
+
+      studentName = sectionName.getCell(_row, 1).getValue();
+
+      if (studentName != "-"){
+
+        counter++;
+      
+        if (counter == 1){
+          tempEmailAddresses = tempEmailAddresses + getEmailsFromRoster_(studentName);
+        }
+        else{
+          tempEmailAddresses = tempEmailAddresses + ", " + getEmailsFromRoster_(studentName);
+        } 
+      }
+
+    }
+    
+  }//end for
+
+  if (counter == 0){
+    return "-";
+  }
+  else{
+    return tempEmailAddresses;
+  }
+     
+}//end function
+
+//this funtion takes a student name and finds the parents emails from the RTMS roster.  The function returns both father and mother's emails. It is coded to return the student as well, but the functionality is commented out. 
+function getEmailsFromRoster_(studentName){
+  
+  var parentEmails = "";
+  
+  var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1NOpccZ_gNNAhAJK1usuzzJLKLI01cws2Lz0YDDOJpw4/edit#gid=985835692");
+  var rtmsRoster = ss.getSheetByName("School Roster");
+  var rosterLastRow = rtmsRoster.getLastRow();
+  
+  var nameList =  rtmsRoster.getRange('D1:D'+rosterLastRow);
+  var fullRoster =rtmsRoster.getRange('A1:M'+rosterLastRow);
+  
+  var _fatherEmail = "" ;   //col 8
+  var _motherEmail = "";   // col11
+  //var _studentEmail = "";  // col13
+  
+  for (var _row = 1; _row <= rosterLastRow ; _row++) {
+  
+    if (nameList.getCell(_row, 1).getValue() == studentName) {
+       
+       _fatherEmail = fullRoster.getCell(_row, 8).getValue();
+       _motherEmail = fullRoster.getCell(_row, 11).getValue();
+       _studentEmail = fullRoster.getCell(_row,13).getValue();
+       
+       if (_fatherEmail != "-") {
+         parentEmails = parentEmails + _fatherEmail;
+         
+         _StudentName_plus_emails = _StudentName_plus_emails + "<tr> <td> " + studentName + " </td> <td>" + _fatherEmail + "</td>"; 
+         _TotalEmailsSent++;
+         _TotalStudentsEmailed ++;
+       }
+      
+       
+       if (_motherEmail != "-") {
+         parentEmails = parentEmails + ", " + _motherEmail;
+         
+         _StudentName_plus_emails = _StudentName_plus_emails +  " <td>" + _motherEmail + "</td>";
+         
+         _TotalEmailsSent++;
+       }
+        else{
+         _StudentName_plus_emails = _StudentName_plus_emails + "<td>-</td>"; 
+       }
+       
+       
+       _StudentName_plus_emails = _StudentName_plus_emails + "</tr>";
+       
+       /*if (_studentEmail != "-") {
+         parentEmails = parentEmails + ", " + _studentEmail;
+       }*/
+       
+        return parentEmails;
+    
+    }//end if
+  }//end for
+
+}//end function
+
+
+//Thi function finds a selected student and finds his/her information on the whole school roster sheet. The result is displayed on an alert text box message.
+function contactTracingReport(){
+
+  //this line instances the currently active sheet. This is used to determined the value of the cell that is being selected.
+  var gradeSheet = SpreadsheetApp.getActiveSheet();
+  
+  var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1NOpccZ_gNNAhAJK1usuzzJLKLI01cws2Lz0YDDOJpw4/edit#gid=985835692");
+  var rtmsRoster = ss.getSheetByName("School Roster");
+  var ContactTracingReport = ss.getSheetByName("Contact Tracing");
+   
+  var cell = gradeSheet.getActiveCell();
+  var a1 = cell.getA1Notation();
+  var cellValue =cell.getValue();
+  var row = 0;
+  var rosterLastRow = rtmsRoster.getLastRow();
+  var ContactTracingReportLastRow = ContactTracingReport.getLastRow();
+  var _flag = 0;
+  
+  var nameList =  rtmsRoster.getRange('D1:D'+rosterLastRow);
+  var fullRoster =rtmsRoster.getRange('A1:N'+rosterLastRow);
+  
+  var _studentNumber; //col 1
+  var _studentName;   //col 4  
+  var _gradeLevel;    // col 5
+  var _homePhone;     // col 6
+  var _fatherName;    // col 7
+  var _fatherEmail;   //col 8
+  var _fatherPhone;   //col9
+  var _motherName;    // col 10
+  var _motherEmail;   // col11
+  var _motherPhone;   //col 12
+  var _busNumber;     //col 14
+     
+          
+  var reportRows = 0;
+  ContactTracingReport.deleteRows(7, ContactTracingReportLastRow);
+  ContactTracingReport.getRange(4, 3).setValue(""); 
+  
+       for (var _row = 1; _row <= rosterLastRow ; _row++) {
+  
+        if (nameList.getCell(_row, 1).getValue() == cellValue) {
+        //if this is true, I have to parse full roster, to match find every student that has the same bus Number
+           
+           _busNumber = fullRoster.getCell(_row, 14).getValue();
+           
+           if (_busNumber == ""){
+               SpreadsheetApp.getUi().alert(cellValue, "This student does not ride the bus!", SpreadsheetApp.getUi().ButtonSet.OK);
+               _flag = -1;
+               break;
+           }
+           
+           for (var _rowBus = 1; _rowBus <= rosterLastRow ; _rowBus++) {
+           
+             if (_busNumber == fullRoster.getCell(_rowBus, 14).getValue() ){ //this means that the student's bus number matches the student on this row from the roster
+               
+               ContactTracingReport.getRange(4, 3).setValue(cellValue);
+               
+               if (cellValue != fullRoster.getCell(_rowBus, 4).getValue()){ //this "IF" prevents the same student to show up in the report.
+               
+                 ContactTracingReport.getRange(reportRows+7, 2).setValue(fullRoster.getCell(_rowBus, 1).getValue());
+                 ContactTracingReport.getRange(reportRows+7, 3).setValue(fullRoster.getCell(_rowBus, 4).getValue());
+                 ContactTracingReport.getRange(reportRows+7, 4).setValue(fullRoster.getCell(_rowBus, 5).getValue());
+                 ContactTracingReport.getRange(reportRows+7, 5).setValue(fullRoster.getCell(_rowBus, 6).getValue());
+                 ContactTracingReport.getRange(reportRows+7, 6).setValue(fullRoster.getCell(_rowBus, 7).getValue());
+                 ContactTracingReport.getRange(reportRows+7, 7).setValue(fullRoster.getCell(_rowBus, 8).getValue());
+                 ContactTracingReport.getRange(reportRows+7, 8).setValue(formatPhoneNumber_(fullRoster.getCell(_rowBus, 9).getValue()));
+                 ContactTracingReport.getRange(reportRows+7, 9).setValue(fullRoster.getCell(_rowBus, 10).getValue());
+                 ContactTracingReport.getRange(reportRows+7, 10).setValue(fullRoster.getCell(_rowBus, 11).getValue());
+                 ContactTracingReport.getRange(reportRows+7, 11).setValue(formatPhoneNumber_(fullRoster.getCell(_rowBus, 12).getValue()));
+                 ContactTracingReport.getRange(reportRows+7, 12).setValue("Bus # " + fullRoster.getCell(_rowBus, 14).getValue());
+                 
+                 reportRows++;
+               }//end "IF" prevents the same student to show up in the report.
+                      
+             }// end "IF" student's bus number matches the student on this row from the roster
+           
+           } //end BUS for
+           
+           /*
+           var response = SpreadsheetApp.getUi().alert(cellValue,                                 
+                                     "\r\nReport successfully generated!" +                                  
+                                     "\r\nWWould you like to see the report now? ", SpreadsheetApp.getUi().ButtonSet.YES_NO);
+                                          
+          
+           if (response == SpreadsheetApp.getUi().Button.YES) {
+              var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[7];
+              var range = sheet.getRange('C4');
+              range.activate();
+              
+              var selection = sheet.getSelection();
+              // Current cell: B5
+              var currentCell = selection.getCurrentCell();
+           }
+           */
+           
+           _flag = 1;      
+           break;
+        
+        }//end if
+      
+      }//end for
+      
+      if (_flag == 0){ 
+       SpreadsheetApp.getUi().alert("Selection not valid!", "Please select a Student Name from the 'Name' column on the dashboard.", SpreadsheetApp.getUi().ButtonSet.OK);
+      }
+      
+      if (_flag > 0 ){ 
+        
+        //the next 5 lines change the focus to the Contact Tracing Report Sheet
+        var sheet =  SpreadsheetApp.getActiveSpreadsheet().getSheets()[7];
+        var range = sheet.getRange('C4');
+        range.activate();       
+        var selection = sheet.getSelection();
+        var currentCell = selection.getCurrentCell();
+      }
+      
+   //}//end else
+ 
+}//end function
+
+
+
+//Thi function finds a selected student and finds his/her information on the whole school roster sheet. The result is displayed on an alert text box message.
+function findStudentInfo(){
+
+  //this line instances the currently active sheet. This is used to determined the value of the cell that is being selected.
+  var gradeSheet = SpreadsheetApp.getActiveSheet();
+  
+  var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1NOpccZ_gNNAhAJK1usuzzJLKLI01cws2Lz0YDDOJpw4/edit#gid=985835692");
+  var rtmsRoster = ss.getSheetByName("School Roster");
+   
+  var cell = gradeSheet.getActiveCell();
+  var a1 = cell.getA1Notation();
+  var cellValue =cell.getValue();
+  var row = 0;
+  var rosterLastRow = rtmsRoster.getLastRow();
+  var _flag = 0;
+  
+  var nameList =  rtmsRoster.getRange('D1:D'+rosterLastRow);
+  var fullRoster =rtmsRoster.getRange('A1:M'+rosterLastRow);
+  
+  var _studentNumber; //col 1
+  var _gradeLevel;    // col 5
+  var _homePhone;     // col 6
+  var _fatherName;    // col 7
+  var _fatherEmail;   //col 8
+  var _fatherPhone;   //col9
+  var _motherName;    // col 10
+  var _motherEmail;   // col11
+  var _motherPhone;    //col 12
+  
+  for (var _row = 1; _row <= rosterLastRow ; _row++) {
+  
+    if (nameList.getCell(_row, 1).getValue() == cellValue) {
+            
+       _studentNumber = fullRoster.getCell(_row, 1).getValue();
+       _gradeLevel = fullRoster.getCell(_row, 5).getValue();
+       _homePhone = fullRoster.getCell(_row, 6).getValue();
+       _fatherName = fullRoster.getCell(_row, 7).getValue();
+       _fatherEmail = fullRoster.getCell(_row, 8).getValue();
+       _fatherPhone = formatPhoneNumber_(fullRoster.getCell(_row, 9).getValue());
+       _motherName = fullRoster.getCell(_row, 10).getValue();
+       _motherEmail = fullRoster.getCell(_row, 11).getValue();
+       _motherPhone = formatPhoneNumber_(fullRoster.getCell(_row, 12).getValue());
+       
+       var response = SpreadsheetApp.getUi().alert(cellValue,"\r\nStudent ID: " + _studentNumber +                                     
+                                 "\r\n \r\nHome Phone Number: " + _homePhone + 
+                                 "\r\n \r\nGrade: " + _gradeLevel + 
+                                 "\r\n\r\nFather Information: " + _fatherName +   
+                                 "\r\n\r\nFather Mobile: " + _fatherPhone + 
+                                 "\r\n\r\nMother Information: " + _motherName +                                  
+                                 "\r\n\r\nMother Mobile: " + _motherPhone + 
+                                 "\r\n\r\nRefernce Row #: " + _row +
+                                 "\r\n\r\nWOULD YOU LIKE TO SEE PARENTS EMAIL ADDRESSES? ", SpreadsheetApp.getUi().ButtonSet.YES_NO);
+                                      
+       
+       if (response == SpreadsheetApp.getUi().Button.YES) {
+         SpreadsheetApp.getUi().alert(cellValue, "\r\nStudent ID: " + _studentNumber +
+                                     "\r\n\r\nFather Email: " + _fatherEmail +
+                                     "\r\n\r\nMother Email: " + _motherEmail +
+                                     "\r\n\r\nRefernce Row #: " + _row , SpreadsheetApp.getUi().ButtonSet.OK)
+       }
+       
+       
+       _flag = 1;
+       break;
+    
+    }//end if
+  
+  }//end for
+  
+  if (_flag == 0){ 
+   SpreadsheetApp.getUi().alert("Selection not valid!", "Please select a Student Name from the 'Name' column on the dashboard.", SpreadsheetApp.getUi().ButtonSet.OK);
+  }
+  
+}//end function
+
+
+//This function formats a phone number from 9665XXXXXXXX to 05X-XXX-XXXX
+function formatPhoneNumber_(oldPhoneNumber){
+
+  var newPhoneNumnber= "0";
+  var oldPhoneTxt = oldPhoneNumber.toString();
+  var phoneLenght = oldPhoneTxt.length -1;
+
+ for (var _i = 3 ; _i <= phoneLenght; _i++){
+ 
+    
+    if (_i == 5 || _i == 8){
+      newPhoneNumnber = newPhoneNumnber + "-" + oldPhoneTxt[_i];
+    }
+    else{
+      newPhoneNumnber = newPhoneNumnber + oldPhoneTxt[_i];
+    }
+  }
+
+  if (newPhoneNumnber == "0"){
+    return "N/A"
+  }
+  else{
+    return newPhoneNumnber;
+  }
+    
+}//end function 
+
+
+//This function alerts the nurse and other admin staff when a positive answer has been selected upon submitting the form.
+function emailNurseWhenPositive() {
+
+var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1NOpccZ_gNNAhAJK1usuzzJLKLI01cws2Lz0YDDOJpw4/edit#gid=1819641673");
+var sheet = ss.getSheetByName("Form Responses 1");
+var lastRow = sheet.getLastRow();
+
+/******* CONSTANT DECLARATION SECTION ******/
+
+// These columns are the column nomber in RTMS spreadsheet that holds the yes/no for both symptoms and exposure questions.  
+//These columns will change from school to school, depending on how many sections that particualr school has
+
+const COL_SYMPTOMS = 34;
+const COL_EXPOSURE = 35;
+const COL_GRADE_STAFF = 3;
+
+/********/
+
+var _lastRow = sheet.getRange('A' + lastRow + ':AI' + lastRow);
+
+var _symptoms = _lastRow.getCell(1,COL_SYMPTOMS).getValue();
+var _exposure = _lastRow.getCell(1,COL_EXPOSURE).getValue();
+var _isStaff = _lastRow.getCell(1,COL_GRADE_STAFF).getValue();
+
+var _message = "";
+var _emailBody = "";
+
+var _email = "";
+var _name = "";
+
+ if ( _symptoms != "No" || _exposure != "No" ) {
+ 
+   _email = _lastRow.getCell(1,2).getValue();
+   _name = getName_(_lastRow);
+   
+   if (_symptoms == "Yes"){
+     _message = "<u>is showing COVID symptoms</u>";
+   }
+   
+   if (_symptoms == "Yes, but medication was given for their symptoms"){
+     _message = "<u>is showing COVID symptoms, but medication was given to treat them</u>";
+   }
+   
+   if (_exposure == "Yes"){
+     _message = "<u>has been exposed to a patient with COVID symptoms</u>";
+   }
+   
+   if (_isStaff != "Staff Member"){
+     _emailBody = "Dear RTMS Admin team,<br><br> The Covid tracking survey indicates that the student: <b>" + _name + "</b> "+ _message + ".<br><br>Contact email: " + _email + "<br>Row #: " + lastRow
+   }
+   else {
+     _emailBody = "Dear RTMS Admin team,<br><br> The Covid tracking survey indicates that the teacher: <b>" + _email + "</b> "+ _message + ".<br><br>Row #: " + lastRow
+   }
+    
+    MailApp.sendEmail({
+      to:  "rhendricks@saeslearning.com, calbritton@saeslearning.com, rtmsattendance@saeslearning.com, mmaples@saeslearning.com" , 
+      subject: "Covid Form - Positive Entry Alert!",
+      htmlBody: _emailBody
+    });
+ }
+  
+}//end function
+
+
+//this function will sweep all columns from the last row and look for the first name that shows up from the list of available sections. Since there can only be one name per row, in the case of students, the function returns
+//the name when it finds the first one.  Please note that this function will skip certain columns that will change from school to school. (see constant declaration section below).  Each school will have to 
+//change this values according to their particular number of sections. 
+function getName_(row){   //parameter row: is a row type object. It contains all the columns on that row. 
+  
+/******* CONSTANT DECLARATION SECTION ******/
+
+// the following constants represent the columns on the spreadsheet that hold only the "Select Homeroom" that has the names of the teachers who are assigned to those homerooms.  
+//these columns are identified with the purpose of skipping them once the sweeping across the row takes place.  
+
+//grade 5 does not get a constant, since it can be skipped altogether
+const GRADE_6_HOMEROOM = 13;
+const GRADE_7_HOMEROOM = 22;
+const GRADE_8_HOMEROOM = 26;
+const GRADE_9_HOMEROOM = 30;
+
+const FIRST_COLUMN = 5;
+const LAST_COLUMN = 32;
+
+/***********/  
+  
+  //In the following FOR cycle, I sweep the last colum, starting from the first column that could get the first name (FIRST_COLUMN).  In RTMS case, LAST_COLUMN holds the last column that could contain a student name.  
+  //please note, these columns will change from school to school
+  
+  for (var _i = FIRST_COLUMN ; _i <= LAST_COLUMN ; _i++) {
+    if (_i != GRADE_6_HOMEROOM &&  _i != GRADE_7_HOMEROOM && _i != GRADE_8_HOMEROOM && _i != GRADE_9_HOMEROOM){
+         
+         if (row.getCell(1,_i).getValue() != ""){ 
+             //returns the first column that finds that is not blank
+             return row.getCell(1,_i).getValue();
+         }
+    }
+  }
+
+}//end _getName Function
+
+//This function makes a back up every night and deletes all the entries for the day.
+function Student_Covid_NightlyPurge() {
+  
+  var dayOfWeek = Utilities.formatDate(new Date(), "GMT+3", "EEEE"); 
+  
+  if (dayOfWeek != 'Friday' && dayOfWeek != 'Saturday'){
+    
+    var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1NOpccZ_gNNAhAJK1usuzzJLKLI01cws2Lz0YDDOJpw4/edit#gid=1819641673");
+    var sheet = ss.getSheetByName("Form Responses 1");
+    
+    //this variable gets the grade9 Sheet to grab the summary
+    var grade9Sheet = ss.getSheetByName("Grade 9");
+    
+    var lastRow = sheet.getLastRow();
+    var lastCol = sheet.getLastColumn();
+    
+    
+    var rtm_date = Utilities.formatDate(new Date(), "GMT+3", "MM/dd/yyyy");
+    var new_name = "Backup-" + rtm_date;
+    
+    /*NEW for Covid Count*/
+    var sypmtomsCount = 0;
+    var ExposureCount = 0;
+    /********/
+    
+    //these constant values are set to determine the columns where the answers for symptoms and exposure are stored. Please note that these values are specific for RTMS.  Any other school will have to change these values
+    //to match their particular spreadsheet layout.
+    const COL_SYMPTOMS = 34;
+    const COL_EXPOSURE = 35;
+    /********************************************/
+       
+    try {
+      //instance the backup log spreadsheet
+      var ss_backup = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1LqLZTvpl9uvpn0rqSTEw6A3NgbJij5MtjouhIq5sy2Q/edit#gid=0");  
+     
+      //Creates a new sheet inside the backup log spreadsheet
+      var newSheet = ss_backup.insertSheet();
+      newSheet.setName(new_name);
+    
+      //this line formats the first column
+      newSheet.getRange('A2:A'+lastRow).setNumberFormat("hh:mm am/pm"); 
+      newSheet.setColumnWidths(2, 1, 200);
+    
+    } catch(err){  
+       SpreadsheetApp.flush(); }
+   
+    //selects range for the whole source sheet
+    var dataToCopy = sheet.getRange('A1:AK'+lastRow);
+    
+    //selects the range for the Performance Summary on the Grade 9 Sheet
+    var performanceSummary = grade9Sheet.getRange('M5:N10');
+    
+    //Creates new sheet on the backup log with unique name
+    var copyToSheet = ss_backup.getSheetByName(new_name);
+    
+    for (var _row = 1; _row <= lastRow ; _row++) {
+      for (var _col = 1; _col <= lastCol ; _col++){
+                  
+       
+        var Paste = copyToSheet.getRange(_row,_col).setValues(dataToCopy.getCell(_row,_col).getValues());
+        
+        //counting the YES for Symptoms 
+        if (_col == COL_SYMPTOMS){
+          if (dataToCopy.getCell(_row,_col).getValues() == "Yes"){
+            sypmtomsCount = sypmtomsCount +1;
+          }
+        }
+        
+         //counting the YES for Symptoms but treated
+        if (_col == COL_SYMPTOMS){
+          if (dataToCopy.getCell(_row,_col).getValues() == "Yes, but medication was given for their symptoms"){
+            sypmtomsCount = sypmtomsCount +1;
+          }
+        }
+        
+        
+        //counting the YES for Exposure
+        if (_col == COL_EXPOSURE){
+          if (dataToCopy.getCell(_row,_col).getValues() == "Yes"){
+            ExposureCount = ExposureCount +1;
+          }
+        }
+        
+       //counting the YES for Symptoms and exposure
+       
+          
+      } //end _col FOR
+      
+    } //end _row FOR
+   
+    
+    /* This section sets a SUMMARY of the total count for students / staff with symptoms and/or exposure per day */   
+    copyToSheet.getRange(lastRow+2,3).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+2,3).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+2,3).setValue("Summary");
+    
+    copyToSheet.getRange(lastRow+2,4).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+2,4).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+2,4).setValue("sypmtoms");
+    
+    copyToSheet.getRange(lastRow+2,5).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+2,5).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+2,5).setValue("Exposure");
+    
+    copyToSheet.getRange(lastRow+2,6).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+2,6).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+2,6).setValue("Entries");
+    
+    copyToSheet.getRange(lastRow+3,3).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+3,3).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+3,3).setBackground("yellow");
+    copyToSheet.getRange(lastRow+3,3).setValue("Total:");
+    
+    copyToSheet.getRange(lastRow+3,4).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+3,4).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+3,4).setBackground("yellow");
+    copyToSheet.getRange(lastRow+3,4).setValue(sypmtomsCount);
+    
+    copyToSheet.getRange(lastRow+3,5).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+3,5).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+3,5).setBackground("yellow");
+    copyToSheet.getRange(lastRow+3,5).setValue(ExposureCount);
+    
+    copyToSheet.getRange(lastRow+3,6).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+3,6).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+3,6).setBackground("yellow");
+    copyToSheet.getRange(lastRow+3,6).setValue(lastRow-1);
+    
+    //this section sets the total count for symptoms and exposure for each day on the last row.
+    copyToSheet.getRange(lastRow+1,COL_SYMPTOMS-1).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+1,COL_SYMPTOMS-1).setBackground("yellow");
+    copyToSheet.getRange(lastRow+1,COL_SYMPTOMS-1).setValue("Total");
+    
+    copyToSheet.getRange(lastRow+1,COL_SYMPTOMS).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+1,COL_SYMPTOMS).setBackground("yellow");
+    copyToSheet.getRange(lastRow+1,COL_SYMPTOMS).setValue(sypmtomsCount);
+    
+    copyToSheet.getRange(lastRow+1,COL_EXPOSURE).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+1,COL_EXPOSURE).setBackground("yellow");
+    copyToSheet.getRange(lastRow+1,COL_EXPOSURE).setValue(ExposureCount);
+    
+    //this section copies the performance summary per day
+
+    //copyToSheet.getRange('D'+lastRow+6+':D'+lastRow+11).setNumberFormat("#,##0");
+    
+    copyToSheet.getRange(lastRow+5,3).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+5,3).setBackgroundRGB(246,178,107);
+    copyToSheet.getRange(lastRow+5,3).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+5,3).setValue("RTMS Performance Summary");
+
+    copyToSheet.getRange(lastRow+5,4).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+5,4).setBackgroundRGB(246,178,107);
+    copyToSheet.getRange(lastRow+5,4).setValue("");
+     
+     
+    copyToSheet.getRange(lastRow+6,3).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+6,3).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+6,3).setValue("Grade 5");
+    
+    copyToSheet.getRange(lastRow+7,3).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+7,3).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+7,3).setValue("Grade 6");
+    
+    copyToSheet.getRange(lastRow+8,3).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+8,3).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+8,3).setValue("Grade 7");
+    
+    copyToSheet.getRange(lastRow+9,3).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+9,3).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+9,3).setValue("Grade 8");
+    
+    copyToSheet.getRange(lastRow+10,3).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+10,3).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+10,3).setValue("Grade 9");
+
+    copyToSheet.getRange(lastRow+11,3).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+11,3).setBackgroundRGB(246,178,107);
+    copyToSheet.getRange(lastRow+11,3).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+11,3).setValue("RTMS Total");
+    
+    copyToSheet.getRange(lastRow+6,4).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+6,4).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+6,4).setNumberFormat("##0%");
+    copyToSheet.getRange(lastRow+6,4).setValue(performanceSummary.getCell(1, 2).getValue());
+    
+    copyToSheet.getRange(lastRow+7,4).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+7,4).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+7,4).setNumberFormat("##0%");
+    copyToSheet.getRange(lastRow+7,4).setValue(performanceSummary.getCell(2, 2).getValue());
+    
+    copyToSheet.getRange(lastRow+8,4).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+8,4).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+8,4).setNumberFormat("##0%");
+    copyToSheet.getRange(lastRow+8,4).setValue(performanceSummary.getCell(3, 2).getValue());
+    
+    copyToSheet.getRange(lastRow+9,4).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+9,4).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+9,4).setNumberFormat("##0%");
+    copyToSheet.getRange(lastRow+9,4).setValue(performanceSummary.getCell(4, 2).getValue());
+    
+    copyToSheet.getRange(lastRow+10,4).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+10,4).setBackgroundRGB(252,229,205);
+    copyToSheet.getRange(lastRow+10,4).setNumberFormat("##0%");
+    copyToSheet.getRange(lastRow+10,4).setValue(performanceSummary.getCell(5, 2).getValue());
+
+    copyToSheet.getRange(lastRow+11,4).setFontWeight("bold");
+    copyToSheet.getRange(lastRow+11,4).setNumberFormat("##0%");
+    copyToSheet.getRange(lastRow+11,4).setBackgroundRGB(246,178,107);
+    copyToSheet.getRange(lastRow+11,4).setBorder(true, true, true, true, null, null);
+    copyToSheet.getRange(lastRow+11,4).setValue(performanceSummary.getCell(6, 2).getValue());
+    
+    
+    
+    // this part deletes only until the last row 
+    sheet.deleteRows(2, lastRow);
+   
+ }//end if weekend
+  
+}//end function 
